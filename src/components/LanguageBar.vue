@@ -60,14 +60,19 @@ export default {
 <style lang="less" scoped>
 .languageBar {
   position: relative;
+  top: 0;
+  left: 0;
   z-index: 1001;
+  min-height: 53px;
 
   .arrow {
     transform: scale(0.6);
     z-index: 100;
     position: absolute;
-    left: 4.7rem;
-    top: 0.28rem;
+    // left: 4.7rem;
+    // top: 0.28rem;
+    left: 4.5rem;
+    top: 0.1rem;
     border: 1px solid #bebebe;
     padding: 3px 10px;
     border-radius: 20px;

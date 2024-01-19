@@ -1,17 +1,17 @@
 <template>
-  <div class="record-box">
+  <!-- <div class="record-box"> -->
     <div class="record" @click="startRecord">
       <svg t="1702999057866" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
         p-id="6543" width="90" height="90">
         <path
           d="M512 444.8c-35.2 0-67.2 28.8-67.2 67.2s28.8 67.2 67.2 67.2 64-32 64-67.2-28.8-67.2-64-67.2z m0 99.2c-16 0-32-12.8-32-32s12.8-32 32-32 32 12.8 32 32-16 32-32 32z"
-          fill="#8a8a8a" p-id="6544"></path>
+          fill="#8a8a8a80" p-id="6544"></path>
         <path
           d="M512 64C262.4 64 64 265.6 64 512s201.6 448 448 448 448-201.6 448-448S758.4 64 512 64z m-147.2 636.8c-6.4 6.4-12.8 9.6-19.2 9.6-6.4 0-16-3.2-19.2-9.6-51.2-51.2-76.8-115.2-76.8-188.8 0-70.4 28.8-137.6 76.8-188.8 12.8-12.8 28.8-12.8 41.6 0s12.8 28.8 0 41.6A205.44 205.44 0 0 0 307.2 512c0 54.4 22.4 108.8 60.8 147.2 9.6 9.6 9.6 28.8-3.2 41.6z m147.2-38.4c-83.2 0-150.4-67.2-150.4-150.4s67.2-150.4 150.4-150.4 150.4 67.2 150.4 150.4-67.2 150.4-150.4 150.4z m188.8 35.2c-6.4 6.4-12.8 9.6-19.2 9.6-6.4 0-16-3.2-19.2-9.6-12.8-12.8-12.8-28.8 0-41.6 38.4-38.4 60.8-89.6 60.8-147.2 0-54.4-22.4-108.8-60.8-147.2-12.8-12.8-12.8-28.8 0-41.6s28.8-12.8 41.6 0c51.2 51.2 76.8 115.2 76.8 188.8-3.2 73.6-32 140.8-80 188.8z"
-          fill="#8a8a8a" p-id="6545"></path>
+          fill="#8a8a8a80" p-id="6545"></path>
       </svg>
     </div>
-  </div>
+  <!-- </div> -->
 
   <van-popup v-model:show="isRecording" @click-overlay="stopRecord" round position="bottom" :style="{ height: '30%' }">
     <template #default>
@@ -130,57 +130,57 @@ export default {
   user-select: none;
 }
 
-.record-box {
-  width: 100%;
-  background-color: var(--bg);
-  height: 89px;
-}
+// .record-box {
+//   width: 100%;
+//   background-color: var(--bg);
+//   height: 89px;
+//   z-index: 1000;
+// }
 
 .record {
   position: fixed;
-  // bottom: 1.5rem;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 50%;
 
-  &::before {
-    content: '';
-    position: absolute;
-    // top: 50%;
-    // left: 50%;
-    transform: translate(-50%, -52%);
-    width: 80px;
-    height: 80px;
-  }
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+ 
+  //   transform: translate(-50%, -52%);
+  //   width: 80px;
+  //   height: 80px;
+  // }
 
-  &:active::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -52%);
-    width: 80px;
-    height: 80px;
-    border: 5px solid #bebebe;
-    border-radius: 50%;
-    animation: emit 2s infinite linear;
-  }
+  // &:active::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 50%;
+  //   transform: translate(-50%, -52%);
+  //   width: 80px;
+  //   height: 80px;
+  //   border: 5px solid #bebebe;
+  //   border-radius: 50%;
+  //   animation: emit 2s infinite linear;
+  // }
 
-  @keyframes emit {
-    0% {
-      width: 80px;
-      height: 80px;
-      opacity: 1;
-      border-width: 5px;
-    }
+  // @keyframes emit {
+  //   0% {
+  //     width: 80px;
+  //     height: 80px;
+  //     opacity: 1;
+  //     border-width: 5px;
+  //   }
 
-    100% {
-      width: 100px;
-      height: 100px;
-      opacity: 0;
-      border-width: 1px;
-    }
-  }
+  //   100% {
+  //     width: 100px;
+  //     height: 100px;
+  //     opacity: 0;
+  //     border-width: 1px;
+  //   }
+  // }
 
 }
 

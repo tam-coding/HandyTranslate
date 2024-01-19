@@ -1,6 +1,8 @@
 <template>
   <div class="textDetail">
-    <van-nav-bar  left-text="返回" left-arrow @click-left="onClickLeft" />
+    <div class="top">
+      <van-nav-bar left-arrow @click-left="onClickLeft" class="icon" />
+    </div>
     <div class="source">
       <div class="title">
         <div class="tag">{{ detail.from }}</div>
@@ -9,7 +11,8 @@
       <div class="content">
         <span v-for="(sentence, index) in detail.source.split(new RegExp('(?<=[,.，。？])'))" :key="index"
           @click="toggleAudioPlay(sentence, detail.from, index)"
-          :class="{ 'playing': isCurrentPlaying && currentPlayingIndex === index && currentLang == detail.from }">{{ sentence
+          :class="{ 'playing': isCurrentPlaying && currentPlayingIndex === index && currentLang == detail.from }">{{
+            sentence
           }}</span>
       </div>
     </div>
@@ -21,7 +24,8 @@
       <div class="content">
         <span v-for="(sentence, index) in detail.target.split(new RegExp('(?<=[,.，。？])'))" :key="index"
           @click="toggleAudioPlay(sentence, detail.to, index)"
-          :class="{ 'playing': isCurrentPlaying && currentPlayingIndex === index && currentLang == detail.to }">{{ sentence
+          :class="{ 'playing': isCurrentPlaying && currentPlayingIndex === index && currentLang == detail.to }">{{
+            sentence
           }}</span>
         <!-- {{ detail.target }} -->
       </div>
@@ -113,6 +117,38 @@ const onClickLeft = () => history.back();
 </script>
 
 <style lang="less" scoped>
+@iconBg:#f5f5f5;
+::v-deep .van-nav-bar__left {
+  padding: 0;
+  background-color: @iconBg;
+  border: none;
+}
+::v-deep .van-nav-bar__content,.van-nav-bar{
+  width: 16px;
+  height: 16px;
+}
+::v-deep .van-hairline--bottom:after{
+  border: none;
+}
+
+.top {
+  margin: 10px 0 0 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: @iconBg;
+  position: relative;
+  font-weight: bold;
+  line-height: 25px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  .icon{
+    position: absolute;
+    top: 7px;
+    left: 7px;
+  }
+}
+
 .textDetail {
 
   .target,

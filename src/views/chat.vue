@@ -6,7 +6,7 @@ import audioRecode from '@/components/audioRecode.vue'
 import MessageBubble from "@/components/MessageBubble.vue";
 import { showFailToast } from 'vant';
 import CryptoJS from 'crypto-js'
-import {appid,secreKey} from '@/config.js'
+import { appid, secreKey } from '@/config.js'
 
 let voice = null
 let sourceAudioUrl = ref("")
@@ -17,19 +17,19 @@ let audioDuration = ref(0)
 let isRotate = ref(false)
 let messageList = reactive([])
 const option1 = [
-      { text: '中文', value: "zh" },
-      { text: '英语', value: "en" },
-      { text: '日语', value: "jp" },
-      { text: '韩语', value: "kor" },
-      { text: '粤语', value: "yue" },
-      { text: '俄语', value: "ru" },
-      { text: '德语', value: "de" },
-      { text: '法语', value: "fra" },
-      { text: '泰语', value: "th" },
-      { text: '葡萄牙语', value: "pt" },
-      { text: '西班牙语', value: "spa" },
-      { text: '阿拉伯语(巴林)', value: "ara" },
-    ];
+  { text: '中文', value: "zh" },
+  { text: '英语', value: "en" },
+  { text: '日语', value: "jp" },
+  { text: '韩语', value: "kor" },
+  { text: '粤语', value: "yue" },
+  { text: '俄语', value: "ru" },
+  { text: '德语', value: "de" },
+  { text: '法语', value: "fra" },
+  { text: '泰语', value: "th" },
+  { text: '葡萄牙语', value: "pt" },
+  { text: '西班牙语', value: "spa" },
+  { text: '阿拉伯语(巴林)', value: "ara" },
+];
 
 let sourceAudioBase64, targetAudioBase64
 onMounted(() => {
@@ -110,14 +110,14 @@ function handleHeader(voice) {
   }
 }
 function handleAudio(pcmBase64, sourceAudioUrlTemp, sourceAudioBase64Temp, bul) {
- 
-if( bul==1){
-   showFailToast("录音时长不能大于60秒")
-   return
-}else if(bul==2){
-   showFailToast("录音文件过大，请重试")
-   return
-}
+
+  if (bul == 1) {
+    showFailToast("录音时长不能大于60秒")
+    return
+  } else if (bul == 2) {
+    showFailToast("录音文件过大，请重试")
+    return
+  }
   //pcmBase64是用来加密的，sourceAudioUrlTemp是测试的方便，sourceAudioBase64是要储存的音频
   console.log(pcmBase64);
   console.log(sourceAudioUrlTemp);
@@ -134,13 +134,9 @@ if( bul==1){
 </script>
 
 <template>
-  <LanguageBar @from="(val) => from = val" @to="(val) => to = val" v-model:isRotate="isRotate" :option1="option1"></LanguageBar>
+  <LanguageBar @from="(val) => from = val" @to="(val) => to = val" v-model:isRotate="isRotate" :option1="option1">
+  </LanguageBar>
   <div class="main">
-    <!-- <audio id="audioPlayer" :src="messageList[0]?.source" controls></audio>
-    <audio id="audioPlayer1" :src="messageList[0]?.target" controls></audio>
-    {{ messageList[0]?.sourceText }}
-    {{ messageList[0]?.targetText }} -->
-    <!-- <MessageBubble position="right"></MessageBubble> -->
     <MessageBubble v-for="(message, index) in messageList" :key="index" :message="message"></MessageBubble>
   </div>
   <audioRecode @audioData="handleAudio"></audioRecode>
@@ -148,10 +144,11 @@ if( bul==1){
 
 <style scoped lang="less">
 .main {
-  padding-top: 10px;
-  height: calc(100vh - 53px - 89px - 55.19px + 10px);
+  max-height: calc( 100vh - 55px - 55px - 53px + 2px);
   background-color: var(--bg);
-  overflow-y: auto;
+  box-sizing: border-box;
+  margin-bottom: 55px;
+  overflow-y: scroll;
 
   &::-webkit-scrollbar {
     display: block;

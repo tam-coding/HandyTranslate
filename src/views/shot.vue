@@ -91,14 +91,14 @@ async function translate() {
   }
 }
 
-let salt = "5445035";
+let salt = "";
 async function signGenerate() {
   console.log(fileList.value[0].file);
   try {
     const image1 = fileList.value[0].file;
     let buffer = await fileToBuffer(image1);
     buffer = new Blob([buffer])
-    // salt = Date.now();
+    salt = Date.now();
     console.log(buffer);
     console.log(md5(buffer));
     console.log(new Uint8Array(await buffer.arrayBuffer()));

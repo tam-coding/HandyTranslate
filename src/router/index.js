@@ -33,6 +33,10 @@ const routes = [
             }
         ]
     },
+    {
+        path: '/index',
+        component: () => import('@/views/index.vue')
+    }
 
 
 ];
