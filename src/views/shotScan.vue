@@ -1,6 +1,6 @@
 <template>
   <div class="shotScan">
-    <LanguageBar></LanguageBar>
+    <LanguageBar :isAuto="true" :isRotate="false" :allowSwith="false" :option1="option1"></LanguageBar>
     <video id="video" autoplay="autoplay" muted v-show="isVideo"></video>
     <div class="img" v-show="!isVideo" @click="previewImg(pasteImg ? pasteImg : imgURL)">
       <div class="wrapper" v-show="isScan"></div>
@@ -34,6 +34,7 @@ const fileList = ref(null);
 let image = ''
 let pasteImg = ref("")
 let isfirst = true
+let to = ref('en')
 
 export default {
   name: 'ShotScan',
@@ -44,6 +45,20 @@ export default {
     let isVideo = ref(true);
     let imgURL = ref('');
     let isScan = ref(true)
+    const option1 = [
+      { text: '中文', value: "zh" },
+      { text: '英语', value: "en" },
+      { text: '日语', value: "jp" },
+      { text: '韩语', value: "kor" },
+      { text: '粤语', value: "yue" },
+      { text: '俄语', value: "ru" },
+      { text: '德语', value: "de" },
+      { text: '法语', value: "fra" },
+      { text: '泰语', value: "th" },
+      { text: '葡萄牙语', value: "pt" },
+      { text: '西班牙语', value: "spa" },
+      { text: '阿拉伯语(巴林)', value: "ara" },
+    ];
 
     onMounted(() => {
       getMedia();
@@ -100,11 +115,11 @@ export default {
 
     function stopMedia() {
       const stream = video.value.srcObject;
-      if(stream!=null){
-      const tracks = stream.getTracks();
-      tracks.forEach(function (track) {
-        track.stop();
-      });
+      if (stream != null) {
+        const tracks = stream.getTracks();
+        tracks.forEach(function (track) {
+          track.stop();
+        });
       }
       video.value.srcObject = null;
     }
@@ -143,7 +158,7 @@ export default {
           showNotify({ type: 'warning', message: '没有识别需要翻译的文字内容，请重试' });
           isScan.value = false
           return
-        } else if (result.data.error_code!="0") {
+        } else if (result.data.error_code != "0") {
           throw Error("err")
         }
         console.log(result);
@@ -202,6 +217,7 @@ export default {
         return false;
       }
       console.log(file);
+      pasteImg.value = ''
       isVideo.value = false
       video.value && stopMedia()
       return true
@@ -230,7 +246,7 @@ export default {
           showNotify({ type: 'warning', message: '没有识别需要翻译的文字内容' });
           isScan.value = false
           return
-        } else if (result.data.error_code!="0") {
+        } else if (result.data.error_code != "0") {
           throw Error("err")
         }
         setTimeout(() => {
@@ -268,7 +284,9 @@ export default {
       pasteImg,
       beforeRead,
       isScan,
-      previewImg
+      previewImg,
+      to,
+      option1
     };
   },
 };
@@ -300,7 +318,8 @@ export default {
     background-color: var(--theme);
     flex: 9;
     overflow-y: auto;
-    &::-webkit-scrollbar{
+
+    &::-webkit-scrollbar {
       display: none;
     }
 

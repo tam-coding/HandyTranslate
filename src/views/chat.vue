@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive, watch, shallowRef, nextTick } from "vue";
+import { onMounted, ref, reactive, watch, shallowRef, nextTick,markRaw } from "vue";
 import { voiceTranslate } from "@/api/api.js";
 import LanguageBar from "@/components/LanguageBar.vue";
 import audioRecode from '@/components/audioRecode.vue'

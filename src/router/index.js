@@ -5,7 +5,7 @@ import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router'
 const routes = [
     {
         path: '/',
-        redirect: '/home'
+        redirect: '/index'
     },
     {
         path: '/home',
@@ -48,7 +48,7 @@ const routes = [
 const router = createRouter({
 // createWebHashHistory()是使用hash模式路由
 // createWebHistory()是使用history模式路由
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 });
 

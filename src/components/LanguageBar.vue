@@ -71,8 +71,10 @@ export default {
     position: absolute;
     // left: 4.7rem;
     // top: 0.28rem;
+    // left: 4.5rem;
+    // top: 0.1rem;
+    top: 0.15rem;
     left: 4.5rem;
-    top: 0.1rem;
     border: 1px solid #bebebe;
     padding: 3px 10px;
     border-radius: 20px;

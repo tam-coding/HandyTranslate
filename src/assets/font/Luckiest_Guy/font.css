@@ -1,0 +1,8 @@
+@font-face {
+  /* 重命名字体名 */
+  font-family: 'Luckiest Guy';
+  /* 引入字体 */
+  src: url('./LuckiestGuy-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}

@@ -9,6 +9,7 @@ import router from './router/index.js'
 import { filters } from './globalFilters/index.js'
 import VConsole from 'vconsole';
 import 'animate.css';
+import '@/assets/font/Luckiest_Guy/font.css'
 
 
 createApp(App)
@@ -36,6 +37,6 @@ const isPc = () => {
 //如果不是生产环境并且不是pc设备那么就显示调试
 if (process.env.NODE_ENV != "prod" && !isPc()) {
   console.log(process.env.NODE_ENV);
-  const vConsole = new VConsole();
+  // const vConsole = new VConsole();
 }
 

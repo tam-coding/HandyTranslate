@@ -66,6 +66,7 @@ const audioUrl = ref("")
     position: relative;
     min-height: 20px;
     padding-bottom: 10px;
+    line-height: 1.3em;
   }
 
 }
