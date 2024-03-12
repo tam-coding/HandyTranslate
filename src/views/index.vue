@@ -6,9 +6,10 @@
       <h1> <span v-for="(item, index) in 'TRANSLATE'" :style="{ 'z-index': 'TRANSLATE'.length - index }">{{ item }}</span>
       </h1>
     </div>
-    <div class="go" @click="goHome"
-      :class="{ 'animate__bounceOut ': isClickGo }">Go »</div>
-
+    <div class="go" @click="goHome" :class="{ 'animate__bounceOut ': isClickGo }">Go »</div>
+    <div class="footer">
+      <a href="https://beian.miit.gov.cn/" class="adom">粤ICP备2024178586号-1</a>
+    </div>
   </div>
 </template>
 
@@ -29,7 +30,7 @@ export default {
     }
     const goHome = () => {
       isClickGo.value = true;
-      sessionStorage.setItem('tabIndex','0');
+      sessionStorage.setItem('tabIndex', '0');
       setTimeout(() => {
         isClickGo.value = false;
         router.push('/chat')
@@ -41,8 +42,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .Index {
   height: 100vh;
   background-color: #000;
@@ -59,7 +58,7 @@ export default {
   span {
     position: relative;
     text-shadow: 10px 0 5px #000;
-    -webkit-text-shadow: 10px 0 5px #000; 
+    -webkit-text-shadow: 10px 0 5px #000;
   }
 }
 
@@ -74,5 +73,22 @@ export default {
   font-size: 100px;
   font-weight: bold;
   transform: translateY(150px);
+}
+
+.footer {
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  font-size: 12px !important;
+  color: #fff !important;
+
+  .adom {
+    color: inherit;
+    font-size: 12px !important;
+    color: #fff !important;
+    text-decoration: none;
+  }
+
 }
 </style>

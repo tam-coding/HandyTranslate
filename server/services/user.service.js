@@ -1,0 +1,31 @@
+const User = require('../models/user.model')
+
+
+class UserService {
+
+  async createUser(user_name, email, password, is_admin) {
+    const result = await User.create({ user_name, email, password, is_admin })
+    return result.dataValues
+  }
+
+
+  async getUserInfo({ id, user_name, email, password, is_admin }) {
+    const whereOpt = {}
+    id && Object.assign(whereOpt, { id })
+    user_name && Object.assign(whereOpt, { user_name })
+    email && Object.assign(whereOpt, { email })
+    password && Object.assign(whereOpt, { password })
+    is_admin && Object.assign(whereOpt, { is_admin })
+    console.log("getUserInfo的where",whereOpt);
+
+    const res = await User.findOne({
+      attributes: ['id', 'user_name', 'email', 'password', 'is_admin'],
+      where: whereOpt,
+    })
+
+    return res ? res.dataValues : null
+  }
+
+}
+
+module.exports = new UserService()

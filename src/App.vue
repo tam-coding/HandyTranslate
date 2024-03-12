@@ -1,4 +1,5 @@
 <script setup>
+console.log(process);
 </script>
 
 <template>

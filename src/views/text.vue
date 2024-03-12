@@ -41,6 +41,7 @@ const to = ref("en")
 let textSearchHistoryList = reactive([])
 const localStorageTextSearchHistoryList = JSON.parse(localStorage.getItem("textSearchHistory")) || []
 textSearchHistoryList.push(...localStorageTextSearchHistoryList)
+// textSearchHistoryList=localStorageTextSearchHistoryList
 const router = useRouter()
 
 async function translate() {
