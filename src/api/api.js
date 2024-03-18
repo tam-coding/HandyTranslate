@@ -20,3 +20,25 @@ export const textTranslate = (query) => requests({
   method: 'get',
   params: query,
 });
+export const sendEmailCode = (email) => requests({
+  url: `/users/sendEmailCode?email=${email}`,
+  method: 'get',
+});
+// user_name, password, email, code, is_admin
+export const register = (data) => requests({
+  url: `/users/register`,
+  method: 'post',
+  data
+});
+
+// email password
+export const login = (data) => requests({
+  url: `/users/login`,
+  method: 'post',
+  data
+});
+
+export const refreshToken = ({refreshToken}) => requests({
+  url: `/users/refreshToken?refreshToken=${refreshToken}`,
+  method: 'get',
+});

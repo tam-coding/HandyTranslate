@@ -10,12 +10,16 @@ import { filters } from './globalFilters/index.js'
 import VConsole from 'vconsole';
 import 'animate.css';
 import '@/assets/font/Luckiest_Guy/font.css'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-
+import { createPinia } from "pinia"; 
+const pinia = createPinia(); 
+pinia.use(piniaPluginPersistedstate);
 createApp(App)
   .use(Vant)
   .use(router)
   .use(filters)
+  .use(pinia)
   .mount('#app')
 
 const isPc = () => {

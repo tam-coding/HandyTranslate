@@ -1,8 +1,12 @@
 const { transporter } = require('../config/nodemailer')
-const { EMAIL_HOST, JWT_SECRET } = process.env
+const { EMAIL_HOST, JWT_SECRET,JWT_REFRESH_SECRET } = process.env
 const { createUser, getUserInfo } = require('../services/user.service')
 const { userRegisterError } = require('../constants/err.type')
 const jwt = require('jsonwebtoken')
+const {
+  tokenExpiredError,
+  invalidToken,
+} = require('../constants/err.type')
 const emailVerificationCodes = new Map();
 
 
@@ -71,8 +75,43 @@ class Usercontroller {
   }
 
   async register(ctx, next) {
-    // todo 验证邮箱验证码
+
     const { user_name, password, email, code, is_admin } = ctx.request.body;
+
+    // 检查验证码是否存在
+    if (!emailVerificationCodes.has(email)) {
+      ctx.app.emit('error', {
+        code: '10001',
+        message: '请先获取验证码',
+        result: '',
+      }, ctx);
+      return;
+    }
+
+    // 检查验证码是否匹配
+    const verificationCode = emailVerificationCodes.get(email);
+    if (verificationCode.code !== code) {
+      ctx.app.emit('error', {
+        code: '10002',
+        message: '验证码不正确',
+        result: '',
+      }, ctx);
+      return;
+    }
+
+    // 检查验证码是否过期
+    if (verificationCode.expireTime < new Date()) {
+      ctx.app.emit('error', {
+        code: '10003',
+        message: '验证码已过期',
+        result: '',
+      }, ctx);
+      return;
+    }
+
+    // 验证通过之后删除验证码
+    // emailVerificationCodes.delete(email);
+
     try {
       const res = await createUser(user_name, email, password, is_admin)
       ctx.body = {
@@ -94,20 +133,72 @@ class Usercontroller {
   async login(ctx, next) {
     const { email, password } = ctx.request.body;
     try {
-      const res = await getUserInfo({ email});
+      const { password, ...res } = await getUserInfo({ email });
+      console.log("user", res);
       if (res) {
+        const token = jwt.sign(res, JWT_SECRET, { expiresIn: '1m' });
+        const decodedToken = jwt.decode(token);
+        const expirationDate = new Date(decodedToken.exp * 1000);
         ctx.body = {
           code: 0,
           message: '登录成功',
           result: {
-            token: jwt.sign(res, JWT_SECRET, { expiresIn: '1d' }),
-          }
+            token,
+            tokenExpire: expirationDate,
+            user_name: res.user_name,
+            email: res.email,
+            is_admin: res.is_admin,
+            id: res.id,
+            refreshToken : jwt.sign(res , JWT_REFRESH_SECRET, { expiresIn: '7d' })
 
+          }
         }
       }
     } catch (error) {
 
     }
+  }
+
+
+  async RefreshToken(ctx, next) {
+    const { refreshToken } = ctx.query
+    console.log("RefreshToken", refreshToken);
+    console.log("ctx.query", ctx.query);
+
+    if (!refreshToken) {
+      console.error('无法获取参数RefreshToken')
+      return ctx.app.emit('error', invalidToken, ctx)
+    }
+    try {
+      // user中包含了payload的信息(id, user_name, is_admin)
+      const { email } = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
+      const { password, ...res } = await getUserInfo({ email });
+      if (res) {
+        const token = jwt.sign(res, JWT_REFRESH_SECRET, { expiresIn: '1m' });
+        const decodedToken = jwt.decode(token);
+        const expirationDate = new Date(decodedToken.exp * 1000);
+        ctx.body = {
+          code: 0,
+          message: '更新token成功',
+          result: {
+            token,
+            tokenExpire: expirationDate,
+          }
+        }
+      }
+    } catch (err) {
+      switch (err.name) {
+        case 'TokenExpiredError':
+          console.error('token已过期', err)
+          return ctx.app.emit('error', tokenExpiredError, ctx)
+        case 'JsonWebTokenError':
+          console.error('无效的token', err)
+          return ctx.app.emit('error', invalidToken, ctx)
+        default:
+          return console.error(err)
+      }
+    }
+    await next()
   }
 }
 

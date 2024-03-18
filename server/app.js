@@ -25,7 +25,7 @@ app.use(
       uploadDir: path.join(__dirname, '../upload'),
       keepExtensions: true,
     },
-    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
+    // parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
   })
 )
 
@@ -50,18 +50,18 @@ app.use(router.routes(), router.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
-  let status = 500
-  switch (err.code) {
-    case '10001':
-      status = 400
-      break
-    case '10002':
-      status = 409
-      break
-    default:
-      status = 500
-  }
-  ctx.status = status
+  // let status = 500
+  // switch (err.code) {
+  //   case '10001':
+  //     status = 400
+  //     break
+  //   case '10002':
+  //     status = 409
+  //     break
+  //   default:
+  //     status = 500
+  // }
+  // ctx.status = status
   ctx.body = err
   console.log(err)
 });

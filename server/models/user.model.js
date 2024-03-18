@@ -10,13 +10,14 @@ const User = sequelize.define('user', {
     allowNull: false,
     unique: true
   },
-  password:{
+  password: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  is_admin:{
+  is_admin: {
     type: Sequelize.BOOLEAN,
-    allowNull: false,
+    defaultValue: 0,
+    comment: '是否为管理员, 0: 不是管理员(默认); 1: 是管理员',
   }
 });
 sequelize.sync({}).then(() => {

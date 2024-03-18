@@ -1,5 +1,7 @@
 //router文件夹下新建index.js文件
 import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router'
+import { useUserStore } from '@/store/user';
+import { showToast } from 'vant';
 
 //注册路由
 const routes = [
@@ -36,6 +38,10 @@ const routes = [
     {
         path: '/index',
         component: () => import('@/views/index.vue')
+    },
+    {
+        path: '/register',
+        component: () => import('@/views/register.vue')
     }
 
 
@@ -51,5 +57,16 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token');
+    const userStore = useUserStore()
+    const email = userStore.user.email
+    if (to.path !== '/register' && !token) {
+        showToast('请先登录')
+        next('/register')
+    }
+    next()
+})
 
 export default router;
