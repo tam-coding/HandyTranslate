@@ -7,7 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('demo:server');
 var http = require('http');
-
+const https = require('https');
+const fs = require('fs');
 /**
  * Get port from environment and store in Express.
  */
@@ -18,13 +19,29 @@ var port = normalizePort(process.env.PORT || '3000');
 /**
  * Create HTTP server.
  */
+// 读取 SSL 私钥文件
+const privateKey = fs.readFileSync(__dirname + '/server.key', 'utf8');
+
+// 读取服务器证书文件
+const serverCert = fs.readFileSync(__dirname + '/server.pem', 'utf8');
+
+// 读取根证书或中间证书文件
+const caCert = fs.readFileSync(__dirname + '/ca.cer', 'utf8');
+
+// var server = https.createServer({
+//   key: privateKey,
+//   cert: serverCert,
+//   ca: caCert, // 可选：如果服务器证书是由中间证书签发的，需要加上中间证书
+//   rejectUnauthorized: false 
+// }, app.callback());
 
 var server = http.createServer(app.callback());
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
+// let IP = process.env.NODE_ENV === 'development' ? process.env.IP : "47.120.55.140"
+let IP = process.env.IP
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);

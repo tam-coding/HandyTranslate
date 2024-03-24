@@ -1,8 +1,8 @@
 <template>
   <div class="languageBar">
-    <van-icon name="arrow" class="arrow" v-if="!allowSwith" />
+    <van-icon name="arrow" class="arrow" v-if="!allowSwith" size="18px"/>
     <van-icon name="arrow" class="arrow" @click="handleSwith" v-else
-      :style="{ 'transform': isRotate ? 'scale(0.6) rotate(180deg)' : '' }" />
+      :style="{ 'transform': isRotate ? 'scale(0.6) rotate(180deg)' : '' }" size="18px"/>
 
     <van-dropdown-menu>
       <van-dropdown-item v-model="value1" :options="isAuto ? autoOption : option1" @change="handleFrom" />
@@ -66,14 +66,14 @@ export default {
   min-height: 53px;
 
   .arrow {
-    transform: scale(0.6);
+    transform: scale(0.7);
     z-index: 100;
     position: absolute;
     // left: 4.7rem;
     // top: 0.28rem;
     // left: 4.5rem;
     // top: 0.1rem;
-    top: 0.15rem;
+    top: 0.3rem;
     left: 4.5rem;
     border: 1px solid #bebebe;
     padding: 3px 10px;

@@ -1,13 +1,12 @@
 <template>
   <div class="top">
     <div class="title">最近搜索</div>
-    <van-icon name="delete-o" color="#aaa" class="van-icon" @click="deleteAll" />
+    <!-- <van-icon name="delete-o" color="#aaa" class="van-icon" @click="deleteAll" /> -->
   </div>
   <div class="main">
-    <historyItem v-for="(item, index) in textSearchHistoryList" :key="index" :history="item" @deleteItem="deleteItem"
-     >
+    <historyItem v-for="(item, index) in textSearchHistoryList" :key="index" :history="item" @deleteItem="deleteItem">
     </historyItem>
-    <van-back-top target=".main" bottom="10vh"   class="custom"/>
+    <van-back-top target=".main" bottom="10vh" class="custom" />
   </div>
 </template>
 
@@ -27,13 +26,9 @@ export default {
   },
   setup(props, context) {
 
-
     function deleteItem(id) {
-      console.log(props.textSearchHistoryList);
-      props.textSearchHistoryList.forEach((item, index) => {
-        item.id === id && props.textSearchHistoryList.splice(index, 1)
-        localStorage.setItem('textSearchHistory', JSON.stringify(props.textSearchHistoryList))
-      });
+      console.log(id);
+      context.emit('deleteItem', id)
     }
 
     function deleteAll() {
@@ -42,8 +37,6 @@ export default {
         localStorage.setItem('textSearchHistory', JSON.stringify(props.textSearchHistoryList))
       })
     }
-
-
 
     return { deleteItem, deleteAll }
   }
@@ -67,6 +60,10 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 8px 0;
+  .title{
+    border-left:5px solid #666;
+    padding-left: 10px
+  }
 
   .van-icon {
     transform: scale(1.2);

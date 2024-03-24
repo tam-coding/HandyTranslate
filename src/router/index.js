@@ -1,5 +1,5 @@
 //router文件夹下新建index.js文件
-import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/store/user';
 import { showToast } from 'vant';
 
@@ -7,7 +7,7 @@ import { showToast } from 'vant';
 const routes = [
     {
         path: '/',
-        redirect: '/index'
+        redirect: '/my'
     },
     {
         path: '/home',
@@ -32,19 +32,27 @@ const routes = [
             {
                 path: '/shotScan',
                 component: () => import('@/views/shotScan.vue')
+            },
+            {
+                path: '/my',
+                component: () => import('@/views/my.vue')
             }
         ]
     },
     {
         path: '/index',
+        redirect: '/my',
         component: () => import('@/views/index.vue')
     },
     {
         path: '/register',
         component: () => import('@/views/register.vue')
-    }
-
-
+    },
+    {
+        path: '/picHistory',
+        component: () => import('@/views/picHistory.vue')
+    },
+  
 ];
 
 
@@ -52,8 +60,8 @@ const routes = [
 
 
 const router = createRouter({
-// createWebHashHistory()是使用hash模式路由
-// createWebHistory()是使用history模式路由
+    // createWebHashHistory()是使用hash模式路由
+    // createWebHistory()是使用history模式路由
     history: createWebHistory(),
     routes
 });
@@ -70,3 +78,5 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router;
+
+

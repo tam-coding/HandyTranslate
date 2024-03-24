@@ -42,3 +42,46 @@ export const refreshToken = ({refreshToken}) => requests({
   url: `/users/refreshToken?refreshToken=${refreshToken}`,
   method: 'get',
 });
+
+
+export const textTran = (query) => requests({
+  url: `/translate/textTranslate`,
+  method: 'get',
+  params: query,
+});
+
+export const getTextHistory = (pageNum,pageSize) => requests({
+  url: `/translate/getTextHistory?pageNum=${pageNum}&pageSize=${pageSize}`,
+  method: 'get',
+});
+
+export const deleteTextById = (id) => requests({
+  url: `/translate/deleteTextById/${id}`,
+  method: 'delete',
+});
+
+export const pictureTran = (data) => requests({
+  url: `/translate/picTranslate`,
+  method: 'post',
+  data,
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+});
+
+export const getPicHistory = (pageNum,pageSize) => requests({
+  url: `/translate/getPicHistory?pageNum=${pageNum}&pageSize=${pageSize}`,
+  method: 'get',
+});
+
+export const voiceTran = (data, headers) => requests({
+  url: "/translate/audioTranslate",
+  method: 'post',
+  data,
+  headers
+});
+
+export const getAudioHistory = (pageNum,pageSize) => requests({
+  url: `/translate/getAudioHistory?pageNum=${pageNum}&pageSize=${pageSize}`,
+  method: 'get',
+});

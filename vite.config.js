@@ -29,6 +29,13 @@ export default defineConfig({
             },
             '/users': {
                 target: "http://127.0.0.1:3002",
+                // target: "http://192.168.1.10",
+                // target: "https://handytranlate.top:3002/",
+                changeOrigin: true,
+            },
+            '/translate': {
+                target: "http://127.0.0.1:3002",
+                // target: "https://handytranlate.top:3002/",
                 changeOrigin: true,
             },
         },

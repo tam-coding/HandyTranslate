@@ -11,8 +11,10 @@ const { getUserInfo } = require('../services/user.service')
 const bcrypt = require('bcryptjs')
 
 const userValidator = async (ctx, next) => {
-  console.log("ctx.request.body",ctx.request);
+  console.log("ctx.request.body",ctx.request.body);
   const { password, email } = ctx.request.body;
+  console.log("password",password);
+  console.log("email",email);
   // 合法性
   if ( !password || !email) {
     console.error('密码或者邮箱为空', ctx.request.body)

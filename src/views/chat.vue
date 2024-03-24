@@ -1,12 +1,13 @@
 <script setup>
-import { onMounted, ref, reactive, watch, shallowRef, nextTick,markRaw } from "vue";
-import { voiceTranslate } from "@/api/api.js";
+import { onMounted, ref, reactive, watch, shallowRef, nextTick, markRaw } from "vue";
+import { voiceTranslate, voiceTran, getAudioHistory as getAudioHistoryAPI } from "@/api/api.js";
 import LanguageBar from "@/components/LanguageBar.vue";
 import audioRecode from '@/components/audioRecode.vue'
 import MessageBubble from "@/components/MessageBubble.vue";
 import { showFailToast } from 'vant';
 import CryptoJS from 'crypto-js'
 import { appid, secreKey } from '@/config.js'
+import { showLoadingToast, closeToast } from 'vant';
 
 let voice = null
 let sourceAudioUrl = ref("")
@@ -31,10 +32,26 @@ const option1 = [
   { text: '阿拉伯语(巴林)', value: "ara" },
 ];
 
+async function getAudioHistory(pageNum,pageSize) {
+  
+  try {
+    const result = await getAudioHistoryAPI(pageNum,pageSize)
+    if (result.data.code == 0) {
+      console.log("getAudioHistoryAPI",result.data);
+      messageList.push(...result.data.result.records)
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+
 let sourceAudioBase64, targetAudioBase64
 onMounted(() => {
-  const data = JSON.parse(localStorage.getItem("messageList")) || []
-  data.length > 0 && messageList.push(...data)
+  // const data = JSON.parse(localStorage.getItem("messageList")) || []
+  // data.length > 0 && messageList.push(...data)
+  getAudioHistory(1,99)
   nextTick(() => {
     const scrollContainer = document.querySelector('.main');
     scrollContainer.scrollTop = scrollContainer.scrollHeight;
@@ -56,35 +73,51 @@ async function fn_voiceTranslate() {
     "format": "pcm",
     "voice": voice
   }
-  let result = await voiceTranslate(data, headers)
-  if (result.data.code === 20200) {
-    showFailToast("翻译失败，请重试")
-    return
-  }
-  if (result.data.code === 0) {
-    console.log(result)
-    targetAudioBase64 = "data:audio/wav;base64," + result.data.data.target_tts
-    sourceAudioBase64 = "data:audio/wav;base64," + sourceAudioBase64
-    // alert(result.data.data.source)
-    // alert(result.data.data.target)
+  showLoadingToast({
+    duration: 0,
+    forbidClick: true,
+    message: '正在努力翻译中...',
+  });
+  try {
+    let result = await voiceTranslate(data, headers)
 
-    const message = {
-      source: sourceAudioBase64,
-      target: targetAudioBase64,
-      sourceText: result.data.data.source,
-      targetText: result.data.data.target,
-      sourceLanguage: fromtemp,
-      targetLanguage: totemp,
-      position: isRotate.value ? 'right' : 'left'
+    if (result.data.code === 20200) {
+      showFailToast("翻译失败，请重试")
+      return
     }
+    if (result.data.code === 0) {
+      console.log(result)
+      targetAudioBase64 = "data:audio/wav;base64," + result.data.data.target_tts
+      sourceAudioBase64 = "data:audio/wav;base64," + sourceAudioBase64
+      // alert(result.data.data.source)
+      // alert(result.data.data.target)
 
-    messageList.push(message)
-    nextTick(() => {
-      const scrollContainer = document.querySelector('.main');
-      scrollContainer.scrollTop = scrollContainer.scrollHeight;
-    })
-    localStorage.setItem("messageList", JSON.stringify(messageList))
+      const message = {
+        source: sourceAudioBase64,
+        target: targetAudioBase64,
+        sourceText: result.data.data.source,
+        targetText: result.data.data.target,
+        sourceLanguage: fromtemp,
+        targetLanguage: totemp,
+        position: isRotate.value ? 'right' : 'left'
+      }
+
+      messageList.push(message)
+      const res = await voiceTran(message)
+      console.log("voiceTran", res);
+
+      nextTick(() => {
+        const scrollContainer = document.querySelector('.main');
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      })
+      // localStorage.setItem("messageList", JSON.stringify(messageList))
+    }
+  } catch (error) {
+    console.log("error", error);
+  } finally {
+    closeToast();
   }
+
 
 }
 function encodeVoice(voice) {
@@ -144,7 +177,7 @@ function handleAudio(pcmBase64, sourceAudioUrlTemp, sourceAudioBase64Temp, bul) 
 
 <style scoped lang="less">
 .main {
-  max-height: calc( 100vh - 55px - 55px - 53px + 2px);
+  max-height: calc(100vh - 55px - 55px - 53px + 2px);
   background-color: var(--bg);
   box-sizing: border-box;
   margin-bottom: 55px;

@@ -1,6 +1,8 @@
 <template>
   <div class="shotScan">
-    <LanguageBar :isAuto="true" :isRotate="false" :allowSwith="false" :option1="option1"></LanguageBar>
+    <van-icon name="clock" class="history" @click="toHistory" size="20px"/>
+    <LanguageBar :isAuto="true" :isRotate="false" :allowSwith="false" :option1="option1" @to="(val) => to = val">
+    </LanguageBar>
     <video id="video" autoplay="autoplay" muted v-show="isVideo"></video>
     <div class="img" v-show="!isVideo" @click="previewImg(pasteImg ? pasteImg : imgURL)">
       <div class="wrapper" v-show="isScan"></div>
@@ -22,29 +24,30 @@
 import LanguageBar from '@/components/LanguageBar.vue';
 import { showNotify } from 'vant';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { pictureTranslate } from '@/api/api'
+import { pictureTranslate, pictureTran } from '@/api/api'
 import { appid, secreKey } from '@/config.js'
 import { showToast } from 'vant';
 import md5 from "md5";
 import fileToBuffer from '@/utils/fileToBinaryBuffer.js'
 import { showImagePreview } from 'vant';
-
-const video = ref(null)
-const fileList = ref(null);
-let image = ''
-let pasteImg = ref("")
-let isfirst = true
-let to = ref('en')
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'ShotScan',
   components: { LanguageBar },
+  
   setup() {
+    const router=useRouter()
     const video = ref(null);
     let mode = ref(true);
     let isVideo = ref(true);
     let imgURL = ref('');
     let isScan = ref(true)
+    const fileList = ref(null);
+    let image = ''
+    let pasteImg = ref("")
+    let isfirst = true
+    let to = ref('en')
     const option1 = [
       { text: '中文', value: "zh" },
       { text: '英语', value: "en" },
@@ -136,6 +139,7 @@ export default {
     }
     const cuid = "APICUID"
     const mac = "mac"
+
     async function translate() {
       try {
         const sign = await signGenerate();
@@ -143,7 +147,7 @@ export default {
         console.log("image", image);
         const data = {
           from: "auto",
-          to: "en",
+          to: to.value,
           appid: appid,
           salt: salt,
           cuid: cuid,
@@ -162,15 +166,22 @@ export default {
           throw Error("err")
         }
         console.log(result);
-        setTimeout(() => {
-          isScan.value = false
-          pasteImg.value = "data:image/png;base64," + result.data.data.pasteImg
-        }, 2000)
+        isScan.value = false
+        const temUrl = await mergeImages("data:image/png;base64," + result.data.data.pasteImg, imgURL.value)
+        console.log("temUrl", temUrl);
+        pasteImg.value = temUrl
+        const res = await pictureTran({ from: result.data.data.from, to: result.data.data.to, picUrl: dataURLtoFile(temUrl, "1.jpg") })
+        console.log("res",res);
+        if (res.data.code == 0) {
+          pasteImg.value = res.data.result.picUrl
+        }
       } catch (error) {
         console.log(error);
-        isScan.value = false
         showNotify({ type: 'warning', message: '识别失败，请重试' });
+      } finally {
+        isScan.value = false
       }
+
     }
 
     let salt = "";
@@ -231,7 +242,7 @@ export default {
         const sign = signGenerate1(binaryData)
         const data = {
           from: "auto",
-          to: "en",
+          to: to.value,
           appid: appid,
           salt: salt,
           cuid: cuid,
@@ -249,15 +260,20 @@ export default {
         } else if (result.data.error_code != "0") {
           throw Error("err")
         }
-        setTimeout(() => {
-          isScan.value = false
-          pasteImg.value = "data:image/png;base64," + result.data.data.pasteImg
-        }, 2000)
-        console.log(result);
+        isScan.value = false
+        const temUrl = await mergeImages("data:image/png;base64," + result.data.data.pasteImg, imgURL.value)
+        console.log("temUrl", temUrl);
+        pasteImg.value = temUrl
+        const res = await pictureTran({ from: result.data.data.from, to: result.data.data.to, picUrl: dataURLtoFile(temUrl, "1.jpg") })
+        console.log("res",res);
+        if (res.data.code == 0) {
+          pasteImg.value = res.data.result.picUrl
+        }
       } catch (error) {
         console.log(error);
-        isScan.value = false
         showNotify({ type: 'warning', message: '识别失败，请重试' });
+      } finally{
+        isScan.value = false
       }
     }
     function signGenerate1(binaryData) {
@@ -265,6 +281,46 @@ export default {
       const query = appid + md5(binaryData) + salt + cuid + mac + secreKey;
       const sign = md5(query);
       return sign
+    }
+    async function mergeImages(image1Src, image2Src) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const image1 = await loadImage(image1Src);
+      const image2 = await loadImage(image2Src);
+
+      canvas.width = Math.max(image1.width, image2.width);
+      canvas.height = image1.height + image2.height;
+
+      ctx.drawImage(image1, 0, 0);
+      ctx.drawImage(image2, 0, image1.height);
+
+      return canvas.toDataURL('image/jpeg');
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+      });
+    }
+    function dataURLtoFile(dataURL, filename) {
+      const arr = dataURL.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new File([u8arr], filename, { type: mime });
+    }
+    function toHistory() {
+      router.push('/picHistory')
     }
 
 
@@ -286,14 +342,20 @@ export default {
       isScan,
       previewImg,
       to,
-      option1
+      option1,
+      toHistory
     };
   },
 };
 </script>
 <style lang="less" scoped>
 @height: calc(100% - 53px - 10%);
-
+.history{
+  position: fixed;
+  top:15px;
+  right: 15px;
+  z-index: 1002;
+}
 .shotScan {
   overflow-y: auto;
   display: flex;

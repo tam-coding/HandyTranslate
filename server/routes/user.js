@@ -14,7 +14,6 @@ router.post('/register', userValidator, verifyUser, cryptPassword, register)
 
 router.post('/login', userValidator, verifyLogin, login)
 
-
 router.get('/refreshToken', RefreshToken)
 
 module.exports = router

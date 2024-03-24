@@ -4,7 +4,7 @@ import { refreshToken } from '@/api/api'
 import router from '@/router'; // 引入Vue Router
 const baseURL = import.meta.env.VITE_APP_BASE_API;
 const requests = axios.create({
-	timeout: 20 * 1000,
+	timeout: 40 * 1000,
 	paramsSerializer: (params) => qs.stringify(params, { indices: false }),
 });
 
@@ -28,7 +28,6 @@ let requestQueue = [];
 
 requests.interceptors.response.use(
 	response => {
-		console.log("interceptors.response", response);
 		if (response.data.code == 10101 || response.data.code == 10102) {
 			if (!isRefreshing) {
 				isRefreshing = true;
@@ -38,7 +37,6 @@ requests.interceptors.response.use(
 						router.push('/register');
 						return Promise.reject("refreshToken也过期了");
 					}
-					console.log("res", res);
 					let { token } = res.data.result;
 					token && localStorage.setItem('token', token);
 					response.headers.Authorization = `Bearer ${token}`;

@@ -55,8 +55,8 @@ import { useRouter } from 'vue-router'
 const Router = useRouter()
 let email = ref('');
 let userName = ref('');
-let password = ref('111111');
-let passwordAgain = ref('111111');
+let password = ref('');
+let passwordAgain = ref('');
 let sms = ref('');
 let active = ref('');
 let isFinished = ref(true);
@@ -112,7 +112,7 @@ const login = async () => {
     console.log("login", res);
     if (res.code === 0) {
       showToast('登录成功')
-      Router.push('/index')
+      Router.push('/')
     }else{
       showToast(res.message)
     }

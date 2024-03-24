@@ -44,24 +44,24 @@ module.exports = {
     message: '没有管理员权限',
     result: '',
   },
-  fileUploadError: {
+  textDeleteError: {
     code: '10201',
-    message: '商品图片上传失败',
+    message: '文本翻译记录删除失败',
     result: '',
   },
-  unSupportedFileType: {
+  textTranError: {
     code: '10202',
-    message: '不支持的文件格式',
+    message: '文本翻译失败',
     result: '',
   },
-  goodsFormatError: {
+  picTranError: {
     code: '10203',
-    message: '商品参数格式错误',
+    message: '图片翻译失败',
     result: '',
   },
-  publishGoodsError: {
+  audioTranError: {
     code: '10204',
-    message: '发布商品失败',
+    message: '语音翻译失败',
     result: '',
   },
   invalidGoodsID: {

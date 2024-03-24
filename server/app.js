@@ -10,6 +10,7 @@ const { koaBody } = KoaBody;
 const logger = require('koa-logger')
 
 const router = require('./routes/index')
+const koaStatic = require('koa-static');
 
 // error handler
 onerror(app)
@@ -22,16 +23,16 @@ app.use(
     formidable: {
       // 在配制选项option里, 不推荐使用相对路径
       // 在option里的相对路径, 不是相对的当前文件. 相对process.cwd()
-      uploadDir: path.join(__dirname, '../upload'),
+      uploadDir: path.join(__dirname, '/public/upload'),
       keepExtensions: true,
     },
-    // parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
+    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
   })
 )
 
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(koaStatic(path.join(__dirname, 'public')))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'

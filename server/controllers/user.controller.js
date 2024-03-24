@@ -136,7 +136,7 @@ class Usercontroller {
       const { password, ...res } = await getUserInfo({ email });
       console.log("user", res);
       if (res) {
-        const token = jwt.sign(res, JWT_SECRET, { expiresIn: '1m' });
+        const token = jwt.sign(res, JWT_SECRET, { expiresIn: '30m' });
         const decodedToken = jwt.decode(token);
         const expirationDate = new Date(decodedToken.exp * 1000);
         ctx.body = {
@@ -174,7 +174,7 @@ class Usercontroller {
       const { email } = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
       const { password, ...res } = await getUserInfo({ email });
       if (res) {
-        const token = jwt.sign(res, JWT_REFRESH_SECRET, { expiresIn: '1m' });
+        const token = jwt.sign(res, JWT_REFRESH_SECRET, { expiresIn: '30m' });
         const decodedToken = jwt.decode(token);
         const expirationDate = new Date(decodedToken.exp * 1000);
         ctx.body = {

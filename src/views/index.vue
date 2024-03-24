@@ -19,23 +19,7 @@ import { useRouter } from 'vue-router';
 export default {
   name: 'index',
   setup(props, context) {
-    let isClicked = ref(false)
-    let isClickGo = ref(false)
-    const router = useRouter()
-    function handleClick() {
-      isClicked.value = true;
-      setTimeout(() => {
-        isClicked.value = false;
-      }, 2000);
-    }
-    const goHome = () => {
-      isClickGo.value = true;
-      sessionStorage.setItem('tabIndex', '0');
-      setTimeout(() => {
-        isClickGo.value = false;
-        router.push('/chat')
-      }, 500);
-    }
+   
     return { handleClick, isClicked, goHome, isClickGo }
   }
 }

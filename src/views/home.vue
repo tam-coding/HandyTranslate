@@ -26,9 +26,9 @@ onBeforeUpdate(() => {
     <van-tabbar-item replace to="/text" :icon="active == 2 ? 'font' : 'font-o'">
       <span :class="active == 2 ? 'active' : 'nagative'">文本翻译</span>
     </van-tabbar-item>
-    <!-- <van-tabbar-item replace to="/" :icon="active == 3 ? 'wap-home' : 'wap-home-o'">
-      <span :class="active == 2 ? 'active' : 'nagative'">首页</span>
-    </van-tabbar-item> -->
+    <van-tabbar-item replace to="/my" :icon="active == 3 ? 'wap-home' : 'wap-home-o'">
+      <span :class="active == 3 ? 'active' : 'nagative'">首页</span>
+    </van-tabbar-item>
   </van-tabbar>
 </template>
 
