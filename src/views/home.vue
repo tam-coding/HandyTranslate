@@ -16,7 +16,7 @@ onBeforeUpdate(() => {
 
 <template>
   <router-view />
-  <van-tabbar route v-model="active" @change="onChange" style="z-index: 101;height: 55px">
+  <van-tabbar route v-model="active" @change="onChange" style="z-index: 101;height: 55px"  >
     <van-tabbar-item replace to="/chat" :icon="active == 0 ? 'chat' : 'chat-o'">
       <span :class="active === 0 ? 'active' : 'nagative'">对话翻译</span>
     </van-tabbar-item>

@@ -7,6 +7,7 @@ const {
   hasNotAdminPermission,
 } = require('../constants/err.type')
 
+const { getVoiceTranslations } = require('../services/media.service')
 
 const auth = async (ctx, next) => {
   const { authorization = "" } = ctx.request.headers;
@@ -29,19 +30,32 @@ const auth = async (ctx, next) => {
 
   await next()
 }
-const hadAdminPermission = async (ctx, next) => {
-  const { is_admin } = ctx.state.user
+const hasCache = async (ctx, next) => {
+  const { ifModifiedSince, authorization = "" } = ctx.request.headers;
+  console.log("ifModifiedSince",ifModifiedSince);
 
-  if (!is_admin) {
-    console.error('该用户没有管理员的权限', ctx.state.user)
-    return ctx.app.emit('error', hasNotAdminPermission, ctx)
+  try {
+    const token = authorization.replace('Bearer ', '');
+    const decodedToken = await jwt.verify(token, JWT_SECRET);
+    const userId = decodedToken.id;
+    const result = await getVoiceTranslations(1,1,userId)
+    console.log("getVoiceTranslations",result);
+    if (ifModifiedSince && new Date(result.records[0].updatedAt).getTime()<=new Date(ifModifiedSince).getTime()) {
+        ctx.status = 304;
+        ctx.body = {
+          code : 0,
+          message:"数据未变化",
+          result:{}
+        }
+    }
+  } catch (error) {
+    console.log("hasCache",error);
   }
-
   await next()
 }
 
 
 module.exports = {
   auth,
-  hadAdminPermission,
+  hasCache
 }

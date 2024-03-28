@@ -4,8 +4,8 @@
     <!-- <van-icon name="delete-o" color="#aaa" class="van-icon" @click="deleteAll" /> -->
   </div>
   <div class="main">
-    <historyItem v-for="(item, index) in textSearchHistoryList" :key="index" :history="item" @deleteItem="deleteItem">
-    </historyItem>
+      <historyItem v-for="(item, index) in textSearchHistoryList" :key="index" :history="item" @deleteItem="deleteItem">
+      </historyItem>
     <van-back-top target=".main" bottom="10vh" class="custom" />
   </div>
 </template>
@@ -60,8 +60,9 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 8px 0;
-  .title{
-    border-left:5px solid #666;
+
+  .title {
+    border-left: 5px solid #666;
     padding-left: 10px
   }
 

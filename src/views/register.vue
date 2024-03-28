@@ -224,6 +224,7 @@ const passwordValidator = () => {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     padding-bottom: 5px;
+
   }
 
   :deep(.van-field__control:focus) {

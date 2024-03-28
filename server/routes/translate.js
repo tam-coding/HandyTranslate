@@ -1,7 +1,7 @@
 const router = require('koa-router')()
-const { auth } = require('../middlewares/auth.middleware')
+const { auth, hasCache } = require('../middlewares/auth.middleware')
 const { textTran, deleteTextTranslationById, getTextHistorage
-  , picTran, getPicHistorage, audioTran,getAudioHistorage } = require('../controllers/translate.controller')
+  , picTran, getPicHistorage, audioTran, getAudioHistorage } = require('../controllers/translate.controller')
 
 router.prefix('/translate')
 
@@ -17,7 +17,7 @@ router.get('/getPicHistory', auth, getPicHistorage)
 
 router.post('/audioTranslate', auth, audioTran)
 
-router.get('/getAudioHistory', auth, getAudioHistorage)
+router.get('/getAudioHistory', auth, hasCache, getAudioHistorage)
 
 
 module.exports = router

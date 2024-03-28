@@ -72,6 +72,9 @@ export const pictureTran = (data) => requests({
 export const getPicHistory = (pageNum,pageSize) => requests({
   url: `/translate/getPicHistory?pageNum=${pageNum}&pageSize=${pageSize}`,
   method: 'get',
+  // headers: {
+  //   "Cache-Control":"no-cache",
+  // }
 });
 
 export const voiceTran = (data, headers) => requests({

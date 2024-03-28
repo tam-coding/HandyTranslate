@@ -360,7 +360,7 @@ export default {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 55px - 53px + 10px);
+  height: calc(100vh - 55px );
 
   &::-webkit-scrollbar {
     display: none;

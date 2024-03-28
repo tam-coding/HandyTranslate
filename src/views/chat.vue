@@ -31,17 +31,37 @@ const option1 = [
   { text: '西班牙语', value: "spa" },
   { text: '阿拉伯语(巴林)', value: "ara" },
 ];
+let pageNum = 1
+let scrollTopTemp
 
-async function getAudioHistory(pageNum,pageSize) {
-  
+async function getAudioHistory(pageNum = 1, pageSize = 5) {
+  console.log("pageNum", pageNum);
   try {
-    const result = await getAudioHistoryAPI(pageNum,pageSize)
+    const result = await getAudioHistoryAPI(pageNum, pageSize)
     if (result.data.code == 0) {
-      console.log("getAudioHistoryAPI",result.data);
-      messageList.push(...result.data.result.records)
+      console.log("getAudioHistoryAPI", result.data);
+      messageList.unshift(...result.data.result.records.reverse())
+      if (pageNum === 1) {
+        nextTick(() => {
+          const scrollContainer = document.querySelector('.main');
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          scrollTopTemp = scrollContainer.scrollTop
+        })
+      } else {
+        nextTick(() => {
+          const scrollContainer = document.querySelector('.main');
+          scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollTopTemp ?? 0
+          scrollTopTemp = scrollContainer.scrollTop
+        })
+      }
+
+      messageList.length >= result.data.result.total && (finished.value = true)
     }
   } catch (error) {
+    error.value = true
     console.log(error);
+  } finally {
+    loading.value = false
   }
 
 }
@@ -51,7 +71,7 @@ let sourceAudioBase64, targetAudioBase64
 onMounted(() => {
   // const data = JSON.parse(localStorage.getItem("messageList")) || []
   // data.length > 0 && messageList.push(...data)
-  getAudioHistory(1,99)
+  getAudioHistory(pageNum, 5)
   nextTick(() => {
     const scrollContainer = document.querySelector('.main');
     scrollContainer.scrollTop = scrollContainer.scrollHeight;
@@ -164,20 +184,33 @@ function handleAudio(pcmBase64, sourceAudioUrlTemp, sourceAudioBase64Temp, bul) 
 
 }
 
+const loading = ref(false);
+const finished = ref(false);
+const error = ref(false);
+function onLoad() {
+  console.log("pageNum", pageNum);
+  pageNum++
+  getAudioHistory(pageNum)
+}
+
 </script>
 
 <template>
   <LanguageBar @from="(val) => from = val" @to="(val) => to = val" v-model:isRotate="isRotate" :option1="option1">
   </LanguageBar>
   <div class="main">
-    <MessageBubble v-for="(message, index) in messageList" :key="index" :message="message"></MessageBubble>
+    <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" direction="up"
+      v-model:error="error" error-text="请求失败，请重新加载" offset="50">
+      <MessageBubble v-for="(message, index) in messageList" :key="index" :message="message"></MessageBubble>
+    </van-list>
+
   </div>
   <audioRecode @audioData="handleAudio"></audioRecode>
 </template>
 
 <style scoped lang="less">
 .main {
-  max-height: calc(100vh - 55px - 55px - 53px + 2px);
+  max-height: calc(100vh - 55px - 53px);
   background-color: var(--bg);
   box-sizing: border-box;
   margin-bottom: 55px;
